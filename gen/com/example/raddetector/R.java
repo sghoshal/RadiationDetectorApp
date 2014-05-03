@@ -1201,14 +1201,14 @@ containing a value of this type.
         public static final int button_send=0x7f060041;
         public static final int checkbox=0x7f060030;
         public static final int collapseActionView=0x7f060011;
-        public static final int contacts_settings=0x7f060063;
+        public static final int contacts_settings=0x7f060062;
         public static final int conversationTV=0x7f06003f;
         public static final int createContactButton=0x7f06005e;
         public static final int createContactTitle=0x7f06004f;
         public static final int default_activity_button=0x7f06002b;
         public static final int dialog=0x7f060012;
         public static final int disableHome=0x7f06000c;
-        public static final int discoverable=0x7f060062;
+        public static final int discoverable=0x7f060061;
         public static final int done_add_button=0x7f060055;
         public static final int dropdown=0x7f060013;
         public static final int edit_query=0x7f060033;
@@ -1225,7 +1225,6 @@ containing a value of this type.
         public static final int icon=0x7f06002d;
         public static final int ifRoom=0x7f06000e;
         public static final int image=0x7f06002a;
-        public static final int insecure_connect_scan=0x7f060061;
         public static final int lastNameEditText=0x7f060051;
         public static final int listMode=0x7f060005;
         public static final int listViewContacts=0x7f06005f;

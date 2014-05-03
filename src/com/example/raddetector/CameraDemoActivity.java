@@ -16,6 +16,7 @@
 
 package com.example.raddetector;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -68,7 +69,8 @@ public class CameraDemoActivity extends FragmentActivity {
 	 * Set camera position to the latitude and longitude readings
 	 * obtained from the device
 	 */
-	public void goToLocationReceivedFromBT() {
+	public void goToLocationReceivedFromBT() throws NumberFormatException {
+
 		final CameraPosition BARC =
 				new CameraPosition.Builder().target(new LatLng(
 						Double.parseDouble(latitude), Double.parseDouble(longitude)))
@@ -77,19 +79,20 @@ public class CameraDemoActivity extends FragmentActivity {
 						.tilt(25)
 						.build();
 
+
 		if (!checkReady()) {
 			return;
 		}
 
 		changeCamera(CameraUpdateFactory.newCameraPosition(BARC), 
 				new CancelableCallback() {
-			
+
 			@Override
 			public void onFinish() {
 				Toast.makeText(getBaseContext(), 
 						"Animation to Location complete", 
 						Toast.LENGTH_SHORT).show();
-				
+
 				mMap.addMarker(new MarkerOptions().position(
 						new LatLng(Double.parseDouble(latitude), 
 								Double.parseDouble(longitude))).title("Marker"));
@@ -98,9 +101,9 @@ public class CameraDemoActivity extends FragmentActivity {
 			@Override
 			public void onCancel() {
 				Toast.makeText(getBaseContext(), 
-						"Animation to Sydney canceled", 
+						"Animation to Location canceled", 
 						Toast.LENGTH_SHORT).show();
-				
+
 				mMap.addMarker(new MarkerOptions().position(
 						new LatLng(Double.parseDouble(latitude), 
 								Double.parseDouble(longitude))).title("Marker"));
@@ -113,7 +116,7 @@ public class CameraDemoActivity extends FragmentActivity {
 			mMap = ((SupportMapFragment) getSupportFragmentManager()
 					.findFragmentById(R.id.map))
 					.getMap();
-			
+
 			if (mMap != null) {
 				setUpMap();
 			}
@@ -123,7 +126,17 @@ public class CameraDemoActivity extends FragmentActivity {
 	private void setUpMap() {
 		// We will provide our own zoom controls.
 		mMap.getUiSettings().setZoomControlsEnabled(false);
-		goToLocationReceivedFromBT();
+		try {
+			goToLocationReceivedFromBT();
+		}
+		catch(NumberFormatException e) {
+			Context context = getApplicationContext();
+			CharSequence text = "Invalid Latitude or Longitiude!";
+			int duration = Toast.LENGTH_SHORT;
+
+			Toast toast = Toast.makeText(context, text, duration);
+			toast.show();
+		}
 	}
 
 	/**

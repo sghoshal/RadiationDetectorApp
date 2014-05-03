@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/secure_connect_scan" android:title="@string/secure_connect_scan"></item>
-    <item android:id="@+id/insecure_connect_scan" android:title="@string/insecure_connect_scan"></item>
-    <item android:id="@+id/discoverable" android:title="@string/discoverable"></item>
-    <item android:id="@+id/contacts_settings" android:title="@string/contactsSettings"></item>
+
+    <item
+        android:id="@+id/secure_connect_scan"
+        android:title="@string/secure_connect_scan">
+    </item>
+<!--      
+	<item 
+		android:id="@+id/insecure_connect_scan" 
+		android:title="@string/insecure_connect_scan">
+	</item> 
+-->
+    <item
+        android:id="@+id/discoverable"
+        android:title="@string/discoverable">
+    </item>
+    <item
+        android:id="@+id/contacts_settings"
+        android:title="@string/contactsSettings">
+    </item>
+
 </menu>

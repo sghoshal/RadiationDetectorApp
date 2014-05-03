@@ -246,24 +246,45 @@ public class MainActivity extends Activity {
 		SpannableString ss = new SpannableString(gpsCoordinatesString);
 
 		String[] splitString = gpsCoordinatesString.split(":");
-		final String latitude = splitString[1].split(",")[0];
-		final String longitude = splitString[1].split(",")[1];
 
-		ClickableSpan clickableSpan = new ClickableSpan() {
-			@Override
-			public void onClick(View textView) {
-				Intent toCameraActivity = new Intent(MainActivity.this, CameraDemoActivity.class);
-				toCameraActivity.putExtra("latitude", latitude);
-				toCameraActivity.putExtra("longitude", longitude);
-				startActivity(toCameraActivity);
-			}
-		};
+		if (splitString.length > 1 && splitString[1].split(",").length <= 1) {
+			Context context = getApplicationContext();
+			CharSequence text = "Invalid Latitude or Longitiude!";
+			int duration = Toast.LENGTH_SHORT;
 
-		System.out.println("Lat: " + latitude + " Long: " + longitude);
-		ss.setSpan(clickableSpan, 5, gpsCoordinatesString.length(), 
-				Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			Toast toast = Toast.makeText(context, text, duration);
+			toast.show();
+			ClickableSpan dummy = new ClickableSpan() {
+				@Override
+				public void onClick(View textView) {
+					Intent toCameraActivity = new Intent(MainActivity.this, CameraDemoActivity.class);
+					startActivity(toCameraActivity);
+				}
+			};
+			ss.setSpan(dummy, 0, 0, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		}
+		else {
+
+			final String latitude = splitString[1].split(",")[0];
+			final String longitude = splitString[1].split(",")[1].split("[\\r\\n\\s]+")[0];
+
+			ClickableSpan clickableSpan = new ClickableSpan() {
+				@Override
+				public void onClick(View textView) {
+					Intent toCameraActivity = new Intent(MainActivity.this, CameraDemoActivity.class);
+					toCameraActivity.putExtra("latitude", latitude);
+					toCameraActivity.putExtra("longitude", longitude);
+					startActivity(toCameraActivity);
+				}
+			};
+
+			System.out.println("Lat: " + latitude + " Long: " + longitude);
+			int startIndex = 5;
+			int lenghtOfCoordinateString = (latitude.length() + 1 + longitude.length());
+			int endIndex = startIndex + lenghtOfCoordinateString - 1;
+			ss.setSpan(clickableSpan, 5, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		}
 		return ss;
-
 	}
 
 	// The Handler that gets information back from the BluetoothChatService
@@ -271,7 +292,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			
+
 			case MESSAGE_STATE_CHANGE:
 				if(D) Log.i(TAG, "MESSAGE_STATE_CHANGE: " + msg.arg1);
 				switch (msg.arg1) {
@@ -300,7 +321,7 @@ public class MainActivity extends Activity {
 				// construct a string from the valid bytes in the buffer
 				String readMessage = new String(readBuf, 0, msg.arg1);
 
-				if(readMessage.toLowerCase().startsWith("gps")) {
+				if(readMessage.toLowerCase().startsWith(("gps"))) {
 					System.out.println("GPS message");
 					conversationTextView.setText(getLinkableGPSString(readMessage));
 				}
@@ -369,10 +390,10 @@ public class MainActivity extends Activity {
 		db = DatabaseSMS.getInstance(this);
 		db.open();
 		List<String> emailList = db.getAllEmails();
-		
+
 		if(emailList.isEmpty())
 			return "";
-		
+
 		String emailIds = "";
 		for(String email : emailList) {
 			emailIds += (email + ";");
@@ -380,9 +401,9 @@ public class MainActivity extends Activity {
 		emailIds = emailIds.substring(0, emailIds.length() - 1);
 		return emailIds;
 	}
-	
+
 	public void onEmailSendClick(View v) {
-		
+
 		Intent i = new Intent(Intent.ACTION_SEND);
 		i.setType("message/rfc822");
 		i.putExtra(Intent.EXTRA_EMAIL  , new String[]{getEmailRecipients()});
@@ -390,7 +411,7 @@ public class MainActivity extends Activity {
 		i.putExtra(Intent.EXTRA_TEXT   , conversationTextView.getText().toString());
 		startActivity(Intent.createChooser(i, "Sending e-mail..."));
 	}
-	
+
 	public void onSMSSendClick(View v) {
 		sendText();
 	}
@@ -405,10 +426,10 @@ public class MainActivity extends Activity {
 		db = DatabaseSMS.getInstance(this);
 		db.open();
 		List<String> phNumberList = db.getAllPhoneNumbers();
-		
+
 		if(phNumberList.isEmpty())
 			return "";
-		
+
 		for(String phNo : phNumberList) {
 			smsRecipients += (phNo + ";");
 		}
@@ -451,11 +472,6 @@ public class MainActivity extends Activity {
 			// Launch the DeviceListActivity to see devices and do scan
 			serverIntent = new Intent(this, DeviceListActivity.class);
 			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
-			return true;
-		case R.id.insecure_connect_scan:
-			// Launch the DeviceListActivity to see devices and do scan
-			serverIntent = new Intent(this, DeviceListActivity.class);
-			startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
 			return true;
 		case R.id.discoverable:
 			// Ensure this device is discoverable by others
